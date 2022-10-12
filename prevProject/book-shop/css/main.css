@@ -8,6 +8,23 @@ body {
 h1 {
     text-align: center;
 }
+h6{
+    font-size: medium;
+}
+h5{
+    font-size: medium;
+}
+
+/* .rateCon{
+    display: block;
+} */
+
+.bookrate{
+    display: inline;
+flex-wrap: wrap;
+font-size: 100%;
+
+}
 
 table {
     background-color: rgb(23, 147, 81);
@@ -85,6 +102,8 @@ button:hover {
 
 img {
     margin: 10%;
+    margin-left: auto;
+  margin-right: auto;
     display: block;
 }
 
@@ -96,7 +115,7 @@ img {
 
 .book-preview {
     background-color: white;
-    color: darkviolet;
+    color: rgb(172, 15, 28);
     width: 20%;
     margin:.5em;
     border: 1px solid lightgray;
