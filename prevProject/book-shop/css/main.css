@@ -15,14 +15,11 @@ h5{
     font-size: medium;
 }
 
-/* .rateCon{
-    display: block;
-} */
+
 
 .bookrate{
-    display: inline;
+    display: block;
 flex-wrap: wrap;
-font-size: 100%;
 
 }
 

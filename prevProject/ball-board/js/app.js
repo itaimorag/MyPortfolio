@@ -46,7 +46,9 @@ function initGame() {
 		elCell.innerHTML = GLUE_IMG
 	}
 	function renderGlue(empty){
+		if(gBoard[empty.i][empty.j].gameElement ===GAMER) return
 		var selectorStr = getClassName(empty)
+		gBoard[empty.i][empty.j].gameElement =null
 		var elCell = document.querySelector('.' + selectorStr)
 		elCell.innerText =''
 	}
@@ -62,7 +64,7 @@ function getEmptyPos(board){
 	var empties=[]
 	for(var i = 0; i < board.length; i++){
         for(var j = 0; j < board[i].length; j++){
-if(board[i][j].type===FLOOR&&board[i][j].gameElement===null){
+if((board[i][j].type===FLOOR)&&(board[i][j].gameElement===null)){
 	var holding={
 		i:i,
 		j:j
@@ -71,7 +73,7 @@ if(board[i][j].type===FLOOR&&board[i][j].gameElement===null){
 }
 }
 	}	
-	return empties[getRandomIntInclusive(0, empties.length)]
+	return empties[getRandomIntInclusive(0, empties.length-1)]
 }
 
 
@@ -144,8 +146,14 @@ function renderBoard(board) {
 
 // Move the player to a specific location
 function moveTo(i, j) {
+	console.log(`i = `, i)
+	console.log(`j = `, j)
 	// console.log(`gIsGlued = `, gIsGlued)
-	if (gIsGlued||document.querySelector('h2').innerText==='game Over!!!') return
+	if (gIsGlued||document.querySelector('h2').innerText==='game Over!!!'){
+		console.log('gIsGlued =',gIsGlued)
+		console.log('not wall ')
+		return
+	}
 
 if(i===5&&j===-1){
 	j=0	
@@ -184,12 +192,15 @@ if(i===5&&j===5){
 				var elcounter=document.querySelector('h3')
 				elcounter.innerText='counter:'+ gCounter
 			}
-			if (targetCell.gameElement === GLUE) {
+			else if (targetCell.gameElement === GLUE) {
 				gIsGlued=true
 				setTimeout(makeMove,3000)
 				
 			}
-			if (targetCell.type === WALL) return
+			else if (targetCell.type === WALL){
+				console.log(`wall `)
+				return
+			}
 			
 			// Calculate distance to make sure we are moving to a neighbor cell
 			const iAbsDiff = Math.abs(i - gGamerPos.i)
@@ -198,25 +209,25 @@ if(i===5&&j===5){
 			// If the clicked Cell is one of the four allowed
 			// if ((iAbsDiff === 1 && jAbsDiff === 0) || (jAbsDiff === 1 && iAbsDiff === 0)) {
 				
+				changeLoc(i,j)
+				
+				var noBall=0
+				for(var k = 0; k < gBoard.length; k++){
+					for(var l = 0; l < gBoard[k].length; l++){
+						if(gBoard[k][l].gameElement !== BALL){
+							noBall++}
+						}
+					}
+					if(noBall===120){
+						var elGameOver = document.querySelector('h2')
+						elGameOver.innerText='game Over!!!'
+						clearInterval(gBallsIntervalId)
+						clearInterval(gGlueIntervalId)
+						return}
 				if (iAbsDiff + jAbsDiff === 1) {
 					
 		// TODO: Move the gamer
         // Model
-		changeLoc(i,j)
-		
-		var noBall=0
-		for(var k = 0; k < gBoard.length; k++){
-			for(var l = 0; l < gBoard[k].length; l++){
-				if(gBoard[k][l].gameElement !== BALL){
-					noBall++}
-				}
-			}
-			if(noBall===120){
-				var elGameOver = document.querySelector('h2')
-				elGameOver.innerText='game Over!!!'
-				clearInterval(gBallsIntervalId)
-				clearInterval(gGlueIntervalId)
-				return}
 		//.נסיון!!!!!!!!
         // gBoard[gGamerPos.i][gGamerPos.j].gameElement = null
         
@@ -285,6 +296,8 @@ function handleKey(event) {
 }
 
 function changeLoc(k,l){
+
+	if(gBoard[gGamerPos.i][gGamerPos.j].gameElement===GLUE) return
 	  // Model
 	  gBoard[gGamerPos.i][gGamerPos.j].gameElement = null      
 	  // DOM
@@ -297,6 +310,7 @@ function changeLoc(k,l){
 	  
 	  // DOM
 	  selectorStr = getClassName(gGamerPos)
+	  console.log(`selectorStr = `, selectorStr)
 	  elCell = document.querySelector('.' + selectorStr)
 	  elCell.innerHTML = GAMER_IMG
 
@@ -309,9 +323,7 @@ function getClassName(location) {
 	const cellClass = 'cell-' + location.i + '-' + location.j
 	return cellClass
 }
-function isEmptyCell(coord) {
-    return gBoard[coord.i][coord.j] === ''
-}
+
 function playSound() {
     var sound = new Audio("sound/pop.mp3");
     sound.play();

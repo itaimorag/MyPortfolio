@@ -1,7 +1,7 @@
 'use strict'
 const STORAGE_KEY = 'bookDB'
 const STORAGE_2KEY = 'readDB'
-const PAGE_SIZE = 5
+const PAGE_SIZE = 4
 const NAMES = ['the Lightning Thief', 'The Sea Of Monsters', 'The Titans Curse', 'The Last Olympian', 'The Labyrinth']
 var gPageIdx = 0
 var gFilterBy = { price: 100, rate: 0, txt: '' }
@@ -140,6 +140,11 @@ function getBooks() {
 function nextPage() {
     if (gPageIdx * PAGE_SIZE + 1 >= gBooks.length||PAGE_SIZE === gBooks.length) return
     gPageIdx++
+}
+
+function getGbooks(){
+    console.log(`gBooks = `, gBooks)
+    return gBooks
 }
 
 function numPage(numOfPage) {

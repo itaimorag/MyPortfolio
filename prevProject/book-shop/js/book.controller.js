@@ -17,10 +17,8 @@ function renderBooks() {
         <article class="book-preview">
             <button class="btn-remove" onclick="onRemoveBook('${books.id}')">X</button>
             <h5>${book.name}</h5>
-            <h6>price: <span>${book.price}</span></h6>
-            <div class="rateCon">
-            <bookrate class="bookrate"> Rate:</bookrate>
-            </div>
+            <h6>price: <span>${book.price}</span></h6>  
+            <bookrate id="${book.name}" class="bookrate"> Rate:${book.rate}⭐</bookrate>
             <button onclick="onReadBook('${book.id}')">Read</button>
             <button onclick="onUpdateBook('${book.id}')">Update</button>
             <img src="img/${book.name}.jpg" alt="book by ${book.name}">
@@ -84,20 +82,11 @@ function onChangeRate(value) {
     if (value === '-') decreaseRate(bookId)
     else increaseRate(bookId)
     var book = getBookById(bookId)
-    makeStars(book)
     elModal.querySelector('h2 span').innerText = book.rate
     elModal.querySelector('rate').innerText = book.rate
+    renderBooks()
 }
 
-function makeStars(book){
-    var elRate=document.querySelector('bookrate')
-    var rateStar=''
-    elRate.innerText=''
-    for(var i=0;i<book.rate;i++){
-        rateStar+='⭐'
-    }
-    elRate.innerText='Rate:'+rateStar
-}
 
 function onCloseModal() {
     document.querySelector('.modal').classList.remove('open')
@@ -159,10 +148,12 @@ function onNumPage(num) {
             renderBooks()
             break;
         case 1:
+            if((PAGE_SIZE*(+num.innerText))>=getGbooks().length) return
             numPage(num=1)
             renderBooks()
             break;
         case 2:
+            if((PAGE_SIZE*(+num.innerText))>=getGbooks().length) return
             numPage(num=2)
             renderBooks()
             break;
